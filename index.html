@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE Academic Portal - University Class Management</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo-area" onclick="navigateTo('home')">
+                <i class="fa-solid fa-graduation-cap logo-icon"></i>
+                <div class="logo-text">
+                    <span class="uni-name">State University</span>
+                    <span class="dept-name">Dept. of Computer Science & Engineering</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu" id="navMenu">
+    <a href="javascript:void(0)" class="nav-link active" onclick="navigateTo('home')"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="navigateTo('routine')"><i class="fa-solid fa-calendar-days"></i> Routine</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="navigateTo('batches')"><i class="fa-solid fa-users"></i> Batches</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="navigateTo('courses')"><i class="fa-solid fa-book-open"></i> Courses</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="navigateTo('teachers')"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="navigateTo('rooms')"><i class="fa-solid fa-door-open"></i> Rooms</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="navigateTo('notices')"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="navigateTo('dashboard')"><i class="fa-solid fa-user-graduate"></i> Dashboard</a>
+    <a href="javascript:void(0)" class="nav-link admin-link" onclick="navigateTo('admin')"><i class="fa-solid fa-lock"></i> Admin</a>
+</nav>
+
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="globalSearchInput" placeholder="Search teacher, course, room..." oninput="handleGlobalSearch(this.value)">
+                    <div id="searchResultsDropdown" class="search-dropdown hidden"></div>
+                </div>
+                <button class="mobile-toggle" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Content Wrapper -->
+    <main class="main-content" id="mainContent">
+
+        <!-- ================= HOME PAGE ================= -->
+        <section id="page-home" class="page-section">
+            <div class="hero-banner">
+                <div class="hero-text">
+                    <h1>Department of Computer Science & Engineering</h1>
+                    <p>Welcome to the central academic management portal. Access class routines, syllabus, notice updates, and course materials all in one place.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="navigateTo('routine')"><i class="fa-solid fa-calendar"></i> View Routine</button>
+                        <button class="btn btn-secondary" onclick="navigateTo('dashboard')"><i class="fa-solid fa-gauge"></i> Student Portal</button>
+                    </div>
+                </div>
+            </div><!-- Quick Access Grid -->
+            <div class="section-title"><h2>Quick Access</h2></div>
+            <div class="quick-grid">
+                <div class="quick-card" onclick="navigateTo('routine')"><i class="fa-solid fa-clock"></i><span>Class Routine</span></div>
+                <div class="quick-card" onclick="navigateTo('batches')"><i class="fa-solid fa-layer-group"></i><span>Batches (1-4)</span></div>
+                <div class="quick-card" onclick="navigateTo('courses')"><i class="fa-solid fa-book"></i><span>Courses & Syllabus</span></div>
+                <div class="quick-card" onclick="navigateTo('teachers')"><i class="fa-solid fa-user-tie"></i><span>Teachers Directory</span></div>
+                <div class="quick-card" onclick="navigateTo('rooms')"><i class="fa-solid fa-building"></i><span>Room Schedule</span></div>
+                <div class="quick-card" onclick="navigateTo('notices')"><i class="fa-solid fa-bell"></i><span>Academic Notices</span></div>
+            </div>
+
+            <!-- Today's Live Class Tracker -->
+            <div class="section-title"><h2>Today's Live Classes</h2></div>
+            <div id="homeTodayClasses" class="class-cards-container"></div>
+
+            <!-- Latest Notices Section -->
+            <div class="section-title"><h2>Latest Notices</h2></div>
+            <div id="homeNoticeList" class="notice-grid"></div>
+        </section>
+
+
+        <!-- ================= ROUTINE PAGE ================= -->
+        <section id="page-routine" class="page-section hidden">
+            <div class="page-header">
+                <h2><i class="fa-solid fa-calendar-days"></i> Class Routine Management</h2>
+                <p>Filter by batch, semester, day, course, or teacher to find exact schedules.</p>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-card">
+                <div class="filter-group">
+                    <label>Batch</label>
+                    <select id="routineFilterBatch" onchange="renderRoutineTable()"></select>
+                </div>
+                <div class="filter-group">
+                    <label>Semester</label>
+                    <select id="routineFilterSemester" onchange="renderRoutineTable()"></select>
+                </div>
+                <div class="filter-group">
+                    <label>Day</label>
+                    <select id="routineFilterDay" onchange="renderRoutineTable()">
+                        <option value="ALL">All Days</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Routine Table -->
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Course</th>
+                            <th>Teacher</th>
+                            <th>Room</th>
+                            <th>Batch & Semester</th>
+                        </tr>
+                    </thead>
+                    <tbody id="routineTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <!-- ================= BATCHES & SEMESTERS PAGE ================= -->
+        <section id="page-batches" class="page-section hidden">
+            <div class="page-header">
+                <h2><i class="fa-solid fa-users"></i> Department Batches & Semesters</h2>
+                <p>Select a batch to inspect its 8 semesters, courses, and syllabus.</p>
+            </div><div class="batch-tabs" id="batchTabsContainer"></div>
+            <div class="semester-grid" id="semesterGridContainer"></div>
+        </section>
+
+
+        <!-- ================= COURSES & SYLLABUS PAGE ================= -->
+        <section id="page-courses" class="page-section hidden">
+            <div class="page-header">
+                <h2><i class="fa-solid fa-book-open"></i> Course Catalog & Syllabus</h2>
+            </div>
+            <div id="coursesListContainer" class="course-list-grid"></div>
+        </section>
+
+
+        <!-- ================= TEACHERS DIRECTORY PAGE ================= -->
+        <section id="page-teachers" class="page-section hidden">
+            <div class="page-header">
+                <h2><i class="fa-solid fa-chalkboard-user"></i> Faculty Members</h2>
+                <input type="text" id="teacherSearchInput" class="form-input" placeholder="Search teacher by name or designation..." oninput="filterTeachers(this.value)">
+            </div>
+            <div id="teachersGrid" class="teachers-grid"></div>
+        </section>
+
+
+        <!-- ================= ROOMS PAGE ================= -->
+        <section id="page-rooms" class="page-section hidden">
+            <div class="page-header">
+                <h2><i class="fa-solid fa-door-open"></i> Classrooms & Smart Labs</h2>
+            </div>
+            <div id="roomsGrid" class="rooms-grid"></div>
+        </section>
+
+
+        <!-- ================= NOTICES PAGE ================= -->
+        <section id="page-notices" class="page-section hidden">
+            <div class="page-header">
+                <h2><i class="fa-solid fa-bullhorn"></i> Academic Notice Board</h2>
+            </div>
+            <div id="noticesFullGrid" class="notice-grid"></div>
+        </section>
+
+
+        <!-- ================= STUDENT DASHBOARD PAGE ================= -->
+        <section id="page-dashboard" class="page-section hidden">
+            <div class="dashboard-header">
+                <h2><i class="fa-solid fa-user-graduate"></i> Personal Student Dashboard</h2>
+                <div class="student-selector">
+                    <select id="dashBatchSelect" onchange="updateDashboard()"></select>
+                    <select id="dashSemesterSelect" onchange="updateDashboard()"></select>
+                </div>
+            </div>
+            <div id="dashboardContent"></div>
+        </section>
+
+
+        <!-- ================= ADMIN PANEL ================= -->
+        <section id="page-admin" class="page-section hidden">
+            <div class="admin-header">
+                <h2><i class="fa-solid fa-lock"></i> Department Administration Panel</h2>
+                <span class="badge badge-admin">Authenticated</span>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="switchAdminTab('routine')">Manage Routine</button>
+                <button class="tab-btn" onclick="switchAdminTab('courses')">Manage Courses</button>
+                <button class="tab-btn" onclick="switchAdminTab('notices')">Manage Notices</button>
+            </div>
+
+            <div id="adminTabContent"></div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div>
+                <h4>CSE Academic Portal</h4>
+                <p>Department of Computer Science & Engineering</p>
+                <p>State University Campus, Science Building Level-4</p>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <a href="#routine" onclick="navigateTo('routine')">Routine</a> |
+                <a href="#courses" onclick="navigateTo('courses')">Courses</a> |
+                <a href="#notices" onclick="navigateTo('notices')">Notices</a>
+            </div>
+        </div>
+    </footer><!-- Custom Modal for Details & Admin Forms -->
+    <div id="appModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript File Linking -->
+    <script src="script.js"></script>
+</body>
+</html>
